@@ -16,9 +16,9 @@ RUN useradd -d /home/pi -G sudo -m pi
 
 RUN echo "pi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/pi
 
-RUN export uid=1000 gid=1000 && \
-    echo "pi:x:${uid}:${gid}:Developer,,,:/home/pi:/bin/bash" >> /etc/passwd && \
-    echo "pi:x:${uid}:" >> /etc/group 
+#RUN export uid=1000 gid=1000 && \
+#    echo "pi:x:${uid}:${gid}:Developer,,,:/home/pi:/bin/bash" >> /etc/passwd && \
+#    echo "pi:x:${uid}:" >> /etc/group 
 
 WORKDIR /home/pi
 
