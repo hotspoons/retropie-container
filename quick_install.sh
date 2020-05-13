@@ -34,9 +34,9 @@ mkdir -p $artifacts_path/configs
 touch $artifacts_path/run-retropie.sh && chmod +x $artifacts_path/run-retropie.sh 
 
 docker build --tag retropie-container:0.0.1 .
-docker run --rm --it --name=retropie --privileged retropie-container:0.0.1 run 
-docker cp hotspoons/retropie-container:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C $artifacts_path/configs 
-docker cp hotspoons/retropie-container:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C $artifacts_path/roms
+docker run -it -d --name=retropie  retropie-container:0.0.1 
+docker cp $container_tag:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C $artifacts_path/configs 
+docker cp $container_tag:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C $artifacts_path/roms
 docker container stop retropie
 
 echo "" > $artifacts_path/run-retropie.sh
