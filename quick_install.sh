@@ -34,14 +34,15 @@ mkdir -p $artifacts_path/configs
 touch $artifacts_path/run-retropie.sh && chmod +x $artifacts_path/run-retropie.sh 
 
 # In case the container was previously created or a step failed, stop it and remove it
-docker container stop retropie
-docker container rm retropie
+docker container stop  $container_name
+docker container rm $container_name
 
 docker build --tag retropie-container:0.0.1 .
 docker run -it -d --name=retropie  retropie-container:0.0.1 
 docker cp $container_name:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf $artifacts_path/retropie-cfg.tar.gz -C $artifacts_path/configs 
 docker cp $container_name:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf $artifacts_path/retropie-roms.tar.gz -C $artifacts_path/roms
-docker container stop retropie
+docker container stop  $container_name
+docker container rm $container_name
 
 echo "" > $artifacts_path/run-retropie.sh
 echo "#!/bin/bash" >> $artifacts_path/run-retropie.sh
@@ -50,16 +51,19 @@ echo "bios_folder=$artifacts_path/bios" >> $artifacts_path/run-retropie.sh
 echo "config_folder=$artifacts_path/configs" >> $artifacts_path/run-retropie.sh
 echo "container_name=$container_tag" >> $artifacts_path/run-retropie.sh
 echo ""  >> $artifacts_path/run-retropie.sh
-echo "docker run -it --rm --name=retropie \" >> $artifacts_path/run-retropie.sh
-echo "  --privileged \" >> $artifacts_path/run-retropie.sh
-echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \" >> $artifacts_path/run-retropie.sh
-echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \" >> $artifacts_path/run-retropie.sh
-echo "  -v /run/user/1000:/run/user/1000 \" >> $artifacts_path/run-retropie.sh
-echo "  -v /dev/input:/dev/input \" >> $artifacts_path/run-retropie.sh
-echo "  -v \$roms_folder:/home/pi/RetroPie/roms \" >> $artifacts_path/run-retropie.sh
-echo "  -v \$bios_folder:/home/pi/RetroPie/BIOS \" >> $artifacts_path/run-retropie.sh
-echo "  -v \$config_folder:/opt/retropie/configs \" >> $artifacts_path/run-retropie.sh
-echo "  \$container_name \" >> $artifacts_path/run-retropie.sh
+echo "docker container stop \$container_name"  >> $artifacts_path/run-retropie.sh
+echo "docker container rm \$container_name"  >> $artifacts_path/run-retropie.sh
+echo ""  >> $artifacts_path/run-retropie.sh
+echo "docker run -it --rm --name=retropie \\" >> $artifacts_path/run-retropie.sh
+echo "  --privileged \\" >> $artifacts_path/run-retropie.sh
+echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
+echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
+echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
+echo "  -v /dev/input:/dev/input \\" >> $artifacts_path/run-retropie.sh
+echo "  -v \$roms_folder:/home/pi/RetroPie/roms \\" >> $artifacts_path/run-retropie.sh
+echo "  -v \$bios_folder:/home/pi/RetroPie/BIOS \\" >> $artifacts_path/run-retropie.sh
+echo "  -v \$config_folder:/opt/retropie/configs \\" >> $artifacts_path/run-retropie.sh
+echo "   \$container_name \\" >> $artifacts_path/run-retropie.sh
 echo "  run" >> $artifacts_path/run-retropie.sh
 echo " " >> $artifacts_path/run-retropie.sh
 echo " bash" >> $artifacts_path/run-retropie.sh
