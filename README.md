@@ -9,6 +9,14 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
  - Docker repo: https://hub.docker.com/r/hotspoons/retropie-container
  - GitHub repo: https://github.com/hotspoons/retropie-container
 
+# Prerequisites
+
+ - Your host system must be an AMD64-based system (will gladly accept help with making this run on RPi! Would need to drop PCSX2 and wine though)
+ - Your host system should have some sort of *nix OS with an X server running, or sufficient polyfill in Windows
+ - You must have docker installed and running on your host system
+ - The current user must have access to manage docker (e.g. member of "docker" group)
+ - ROMs and BIOSes will help with making this setup useful
+
 # Quick install + run
 
 Execute the following in a shell on your docker host to install and run this container:
@@ -35,11 +43,15 @@ chmod +x quick_install.sh
 
 ```
 
-# Usage
+# Manual installation and configuration
 
-## Building
+If the default choices provided by the quick install script aren't suitable for your needs or you are afraid to edit the script, 
+keep reading.
 
-To pull and build the image locally using default settings, run the following:
+## Building the default configuration
+
+To pull and build the image locally using default settings (which includes almost everything available in RetroPie, plus PCSX2 and Wine), 
+run the following, then skip the next section:
 
 ```bash
 
