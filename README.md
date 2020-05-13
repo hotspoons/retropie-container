@@ -23,6 +23,8 @@ cd rpc
 # If you were to customize the modules that are installed, you would do it here by editing "addons.cfg", then continue with the next step
 chmod +x quick_install.sh
 ./quick_install.sh
+# And now you will wait for several hours for the build process to complete
+
 ```
 
 ## Run
