@@ -1,12 +1,14 @@
 #!/bin/bash
 
-source ./addons.cfg
+source /tmp/addons.cfg
 
 
 user="$SUDO_USER"
 [[ -z "$user" ]] && user="$(id -un)"
 home="$(eval echo ~$user)"
 readonly RP_SETUP_DIR="$home/RetroPie-Setup"
+
+echo "Starting module installations..."
 
 cd $RP_SETUP_DIR
 

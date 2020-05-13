@@ -1,6 +1,32 @@
-FROM retropie-base-container:0.0.1
+FROM ubuntu:18.04
 
 ENV LANG C.UTF-8
+
+RUN dpkg --add-architecture i386
+
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y \
+      ca-certificates git lsb-release sudo \
+      curl \
+      libgl1-mesa-dri \
+      udev \
+      vim \
+      mesa-utils \
+      libcap2-bin \
+      wine-stable \
+      tzdata \
+      software-properties-common
+
+RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Installs PCSX2 daily from PPA
+
+RUN add-apt-repository ppa:pcsx2-team/pcsx2-daily -y
+
+RUN apt-get install -y pcsx2-unstable
+
+RUN useradd -d /home/pi -G sudo -m pi
+
+RUN echo "pi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/pi
 
 WORKDIR /home/pi
 
