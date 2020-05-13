@@ -1,4 +1,6 @@
-FROM ubuntu:18.04
+FROM nvidia/opengl:1.0-glvnd-runtime-ubuntu18.04
+
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display
 
 ENV LANG C.UTF-8
 
