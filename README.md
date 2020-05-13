@@ -4,7 +4,9 @@ This is a configurable build container for RetroPie based on [laseryuan's retrop
 Currently this container targets AMD64 only, and this is meant for a full fledged installation of RetroPie plus the majority of addons/modules into an 
 Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA. 
 
-Available here: https://hub.docker.com/r/hotspoons/retropie-container
+**This will take a very very long time to build, like overnight**
+
+The docker repo page is available here: https://hub.docker.com/r/hotspoons/retropie-container
 
 # Usage
 
