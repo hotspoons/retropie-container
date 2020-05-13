@@ -36,7 +36,7 @@ Modify the "addons.cfg" file to include or exclude modules as desired, found her
 
 Then build and tag the repository locally (in this example, with the tag "retropie-container:0.0.1"):
 
-'''bash
+```bash
 
 docker build --tag retropie-container:0.0.1 .
 
