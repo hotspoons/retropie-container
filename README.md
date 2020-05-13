@@ -13,6 +13,12 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
 
  - Your host system must be an AMD64-based system (will gladly accept help with making this run on RPi! Would need to drop PCSX2 and wine though)
  - Your host system should have some sort of *nix OS with an X server running, or sufficient polyfill in Windows
+ - If using the NVIDIA proprietary driver:
+     - Install and configure nvidia-docker for your system, see https://github.com/NVIDIA/nvidia-docker for details
+     - Clone the GitHub repo, e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container rpc && cd rpc
+     - Swtich to the "features/nvidia-support" branch, e.g. git checkout features/nvidia-support
+     - Follow the quick or manual build processes below
+     - A better solution will follow
  - You must have docker installed and running on your host system
  - The current user must have access to manage docker (e.g. member of "docker" group)
  - ROMs and BIOSes will help with making this setup useful
