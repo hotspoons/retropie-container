@@ -26,7 +26,7 @@ docker run --rm hotspoons/retropie-container
 
 Yes, I know this breaks the core tenet of repeatabile, portable builds for docker images, but you wouldn't be looking here if this was your primary concern :).
 
-To modify what modules/addons are build, clone the git repository:
+To modify which modules/addons are built, clone the git repository:
 
 ```bash
 
