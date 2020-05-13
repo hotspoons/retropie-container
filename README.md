@@ -56,10 +56,6 @@ Please set the following variables in the script below:
  - **roms_folder** : This should correspond to a path on the host where ROMs are organized by system, for use by RetroPie. 
  - **bios_folder** : This should correspond to a path on the host where BIOS images are stored
  - **config_folder** : This is where persistent storage for all RetroPie configuration is stored on the host system
- - **media_root** : An optional volume to mount in the container; omit this argument from the script below if not used. My use case is that all of my emulator assets are stored in an NFS share mounted on /media/import/media on the host, then symlinked from a central folder on the mount.  Using this volume makes resolving the links possible. 
-     - In my configuration, the **roms_folder** volume is /media/import/media/emulators/retropie_links/roms on the host system. The 
-RetroPie *arcade* folder **retropie_links/roms/arcade** is a symlink to another folder on this volume like so:   
-         - **/media/import/media/emulators/retropie_links/roms/arcade -> /media/import/media/emulators/MAME2003_Reference_Set_MAME0.78_ROMs_CHDs_Samples**
  - **container_name** : If using the stock image, leave as is; if you customized your image, use your local container tag 
 
 ```bash
@@ -67,7 +63,6 @@ RetroPie *arcade* folder **retropie_links/roms/arcade** is a symlink to another 
 roms_folder=/path/to/roms/folder
 bios_folder=/path/to/bios/folder
 config_folder=/path/to/persistent/config/folder
-media_root=/path/to/optional/absolute/mount/for/symlinks
 container_name=hotspoons/retropie-container # or retropie-container:0.0.1 if built and tagged locally
 
 
@@ -76,7 +71,6 @@ docker run -it --rm --name=retropie \
   -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \
   -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
   -v /run/user/1000:/run/user/1000 \
-  -v $media_root:$media_root \
   -v /dev/input:/dev/input \
   -v $roms_folder:/home/pi/RetroPie/roms \
   -v $bios_folder:/home/pi/RetroPie/BIOS \
