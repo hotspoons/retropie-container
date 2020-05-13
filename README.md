@@ -56,8 +56,8 @@ Please set the following variables in the script below:
  - **roms_folder** : This should correspond to a path on the host where ROMs are organized by system, for use by RetroPie. 
  - **bios_folder** : This should correspond to a path on the host where BIOS images are stored
  - **config_folder** : This is where persistent storage for all RetroPie configuration is stored on the host system
- - **media_root** : An optional volume to mount in the container; omit this argument if not used in the command. My use case is that all of \
-my emulator assets are stored in an NFS share mounted on /media/import/media on the host, then symlinked from a central folder on the mount. \
+ - **media_root** : An optional volume to mount in the container; omit this argument if not used in the command. My use case is that all of  
+my emulator assets are stored in an NFS share mounted on /media/import/media on the host, then symlinked from a central folder on the mount.  
 Using this volume makes resolving the links possible. 
      - In my configuration, the **roms_folder** volume is /media/import/media/emulators/retropie_links/roms on the host system. The 
 RetroPie *arcade* folder **retropie_links/roms/arcade** is a symlink to another folder on this volume like so:   
