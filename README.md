@@ -9,6 +9,30 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
  - Docker repo: https://hub.docker.com/r/hotspoons/retropie-container
  - GitHub repo: https://github.com/hotspoons/retropie-container
 
+# Quick install + run
+
+Execute the following in a shell on your docker host to install and run this container:
+
+## Install
+
+```bash
+
+cd ~
+git clone https://github.com/hotspoons/retropie-container rpc
+cd rpc
+# If you were to customize the modules that are installed, you would do it here by editing "addons.cfg", then continue with the next step
+chmod +x quick_install.sh
+./quick_install.sh
+```
+
+## Run
+
+```bash
+
+~/.config/retropie-container/run-retropie.sh
+
+```
+
 # Usage
 
 ## Building
