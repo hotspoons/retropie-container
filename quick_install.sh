@@ -33,10 +33,14 @@ mkdir -p $artifacts_path/roms
 mkdir -p $artifacts_path/configs
 touch $artifacts_path/run-retropie.sh && chmod +x $artifacts_path/run-retropie.sh 
 
+# In case the container was previously created or a step failed, stop it and remove it
+docker container stop retropie
+docker container rm retropie
+
 docker build --tag retropie-container:0.0.1 .
 docker run -it -d --name=retropie  retropie-container:0.0.1 
-docker cp $container_tag:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C $artifacts_path/configs 
-docker cp $container_tag:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C $artifacts_path/roms
+docker cp $container_name:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf $artifacts_path/retropie-cfg.tar.gz -C $artifacts_path/configs 
+docker cp $container_name:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf $artifacts_path/retropie-roms.tar.gz -C $artifacts_path/roms
 docker container stop retropie
 
 echo "" > $artifacts_path/run-retropie.sh
