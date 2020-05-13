@@ -58,7 +58,7 @@ To copy these assets out and extract them, perform the following (this assumes y
 ```bash
 
 mkdir -p ~/retropie-assets/configs && mkdir ~/retropie-assets/roms && cd ~/retropie-assets
-docker cp hotspoons/retropie-container:/home/pi/retropie-cfg.tar.gz retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C configs
+docker cp hotspoons/retropie-container:/home/pi/retropie-cfg.tar.gz retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C configs # or  - docker cp retropie-container:0.0.1:/home/pi/... if using a custom image
 docker cp hotspoons/retropie-container:/home/pi/retropie-roms.tar.gz retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C roms
 
 ```
