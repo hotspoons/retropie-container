@@ -10,7 +10,7 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
 
 To pull and build the image locally using default settings, run the following:
 
-''' bash
+'''bash
 
 docker run --rm hotspoons/retropie-container
 
@@ -23,7 +23,7 @@ Yes, I know this breaks the core tenet of repeatabile, portable builds for docke
 
 To modify what modules/addons are build, clone the git repository:
 
-''' bash
+'''bash
 
 cd ~
 git clone https://github.com/hotspoons/retropie-container.git
@@ -36,7 +36,7 @@ Modify the "addons.cfg" file to include or exclude modules as desired, found her
 
 Then build and tag the repository locally (in this example, with the tag "retropie-container:0.0.1"):
 
-''' bash
+'''bash
 
 docker build --tag retropie-container:0.0.1 .
 
@@ -57,7 +57,7 @@ on /media/import/media on the host, then symlinked from a central folder on the 
 my media volume in the container
  - container_name : If using the stock image, leave as is; if you customized your image, use your local container tag 
 
-''' bash
+'''bash
 #!/bin/bash
 roms_folder=/path/to/roms/folder
 bios_folder=/path/to/bios/folder
