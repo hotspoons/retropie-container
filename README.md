@@ -47,9 +47,27 @@ docker build --tag retropie-container:0.0.1 .
 
 ```
 
-## Running
+## Persistence and Artifacts
 
-To run the default image, either execute the following in a shell, or create a shell script and execute it.
+You will need to extract the RetroPie configuration for all modules that were built, as well as assets that were stored in the *RetroPie/roms* folder for
+ports and other non-core/base runtimes from the image after building is completed. As part of the build process, these are archived in the image under 
+*/home/pi/retropie-cfg.tar.gz* and */home/pi/retropie-roms.tar.gz* respectively.
+
+To copy these assets out and extract them, perform the following (this assumes you want to copy and extract these to the folder ~/retropie-assets/; adjust these steps for your enviornment):
+
+```bash
+
+mkdir -p ~/retropie-assets/configs && mkdir ~/retropie-assets/roms && cd ~/retropie-assets
+docker cp hotspoons/retropie-container:/home/pi/retropie-cfg.tar.gz retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C configs
+docker cp hotspoons/retropie-container:/home/pi/retropie-roms.tar.gz retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C roms
+
+```
+
+When configuring RetroPie to run below, use the structure extracted from retropie-cfg.tar.gz, e.g ~/retropie-assets/configs as the **config_folder** variable. 
+Merge the contents of ~/retropie-assets/roms with your roms folder, used below as **roms_folder**.
+
+
+## Configuration
 
 Please set the following variables in the script below:
 
@@ -57,6 +75,10 @@ Please set the following variables in the script below:
  - **bios_folder** : This should correspond to a path on the host where BIOS images are stored
  - **config_folder** : This is where persistent storage for all RetroPie configuration is stored on the host system
  - **container_name** : If using the stock image, leave as is; if you customized your image, use your local container tag 
+
+## Running
+
+To run the default image, either execute the following in a shell, or create a shell script and execute it.
 
 ```bash
 #!/bin/bash
