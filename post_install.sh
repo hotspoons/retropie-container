@@ -25,5 +25,7 @@ fi
 
 sudo __platform=$__platform "$RP_SETUP_DIR/retropie_packages.sh" "$JS_SCRIPTMODULE"
 
-tar -czvf $home/retropie-cfg.tar.gz /opt/retropie/configs
-tar -czvf $home/retropie-roms.tar.gz $home/RetroPie/roms
+cd /opt/retropie/configs
+tar -czvf $home/retropie-cfg.tar.gz .
+cd $home/RetroPie/roms
+tar -czvf $home/retropie-roms.tar.gz .
