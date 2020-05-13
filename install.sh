@@ -70,4 +70,4 @@ fi
 
 sudo __platform=$__platform "$RP_SETUP_DIR/retropie_packages.sh" "$JS_SCRIPTMODULE"
 
-tar -czvf $home/retropie-cfg.tar.gz /opt/retropie/config 
+tar -czvf $home/retropie-cfg.tar.gz /opt/retropie/configs
