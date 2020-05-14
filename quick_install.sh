@@ -39,13 +39,33 @@ docker container rm $container_name
 
 docker build --tag retropie-container:0.0.1 .
 docker run -it -d --name=retropie  retropie-container:0.0.1 
-docker cp $container_name:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar -xvf $artifacts_path/retropie-cfg.tar.gz -C $artifacts_path/configs 
-docker cp $container_name:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar -xvf $artifacts_path/retropie-roms.tar.gz -C $artifacts_path/roms
+docker cp $container_name:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar --skip-old-files -xvf $artifacts_path/retropie-cfg.tar.gz -C $artifacts_path/configs 
+docker cp $container_name:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar --skip-old-files -xvf $artifacts_path/retropie-roms.tar.gz -C $artifacts_path/roms
 docker container stop  $container_name
 docker container rm $container_name
 
 echo "" > $artifacts_path/run-retropie.sh
 echo "#!/bin/bash" >> $artifacts_path/run-retropie.sh
+echo "" >> $artifacts_path/run-retropie.sh
+echo "help()" >> $artifacts_path/run-retropie.sh
+echo "{" >> $artifacts_path/run-retropie.sh
+echo "   echo \"\"" >> $artifacts_path/run-retropie.sh
+echo "   echo \"Usage: $0 -h -c *custom arguments for docker run command\"" >> $artifacts_path/run-retropie.sh
+echo "   echo -e \"\\t-h Print this help\"" >> $artifacts_path/run-retropie.sh
+echo "   echo -e \"\\t-c any custom arguments you wish to provide to the docker run command, such as additional volume mounts\"" >> $artifacts_path/run-retropie.sh
+echo "   exit 1" >> $artifacts_path/run-retropie.sh
+echo "}" >> $artifacts_path/run-retropie.sh
+echo "" >> $artifacts_path/run-retropie.sh
+echo "while getopts \":hc:\" opt" >> $artifacts_path/run-retropie.sh
+echo "do" >> $artifacts_path/run-retropie.sh
+echo "   case "\$opt" in" >> $artifacts_path/run-retropie.sh
+echo "      h ) help; exit 0 ;;" >> $artifacts_path/run-retropie.sh
+echo "      c ) custom_args=\"$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
+echo "      :) echo \"missing argument for option -$OPTARG\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
+echo "      \?) echo \"didnt' get that\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
+echo "   esac" >> $artifacts_path/run-retropie.sh
+echo "done" >> $artifacts_path/run-retropie.sh
+echo "" >> $artifacts_path/run-retropie.sh
 echo "roms_folder=$artifacts_path/roms" >> $artifacts_path/run-retropie.sh
 echo "bios_folder=$artifacts_path/bios" >> $artifacts_path/run-retropie.sh
 echo "config_folder=$artifacts_path/configs" >> $artifacts_path/run-retropie.sh
@@ -64,6 +84,7 @@ echo "  -v /dev/input:/dev/input \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$roms_folder:/home/pi/RetroPie/roms \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$bios_folder:/home/pi/RetroPie/BIOS \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$config_folder:/opt/retropie/configs \\" >> $artifacts_path/run-retropie.sh
+echo "  \$custom_args \\" >> $artifacts_path/run-retropie.sh
 echo "   \$container_name \\" >> $artifacts_path/run-retropie.sh
 echo "  run" >> $artifacts_path/run-retropie.sh
 echo " " >> $artifacts_path/run-retropie.sh
