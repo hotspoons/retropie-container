@@ -56,6 +56,7 @@ echo "docker container rm \$container_name"  >> $artifacts_path/run-retropie.sh
 echo ""  >> $artifacts_path/run-retropie.sh
 echo "docker run -it --rm --name=retropie \\" >> $artifacts_path/run-retropie.sh
 echo "  --privileged \\" >> $artifacts_path/run-retropie.sh
+echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
 echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
 echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
