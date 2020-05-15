@@ -3,6 +3,7 @@
 container_tag=retropie-container:0.0.1
 artifacts_path=~/.config/retropie-container
 container_name=retropie
+is_nvidia=
 
 echo 
 printf "This is a no-frills, low resistence installation script for hotspoons/retropie-container. This assumes you have already installed docker on your \
@@ -17,7 +18,8 @@ echo
 echo
 printf "Would you like to continue? Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
 and your configuration will be stored in $artifacts_path/configs. After installation, you can run this container from a Desktop Linux session \
-by running the command \"$artifacts_path/run-retropie.sh\".\n\n"
+by running the command \"$artifacts_path/run-retropie.sh\". You may provide additional arguments to the \"docker run\" command by providing \
+the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume --gpus all\" \n\n"
 
 
 
@@ -60,7 +62,7 @@ echo "while getopts \":hc:\" opt" >> $artifacts_path/run-retropie.sh
 echo "do" >> $artifacts_path/run-retropie.sh
 echo "   case "\$opt" in" >> $artifacts_path/run-retropie.sh
 echo "      h ) help; exit 0 ;;" >> $artifacts_path/run-retropie.sh
-echo "      c ) custom_args=\"$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
+echo "      c ) custom_args=\"\$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
 echo "      :) echo \"missing argument for option -$OPTARG\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
 echo "      \?) echo \"didnt' get that\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
 echo "   esac" >> $artifacts_path/run-retropie.sh
@@ -70,13 +72,14 @@ echo "roms_folder=$artifacts_path/roms" >> $artifacts_path/run-retropie.sh
 echo "bios_folder=$artifacts_path/bios" >> $artifacts_path/run-retropie.sh
 echo "config_folder=$artifacts_path/configs" >> $artifacts_path/run-retropie.sh
 echo "container_name=$container_tag" >> $artifacts_path/run-retropie.sh
+echo "container_short_name=$container_name" >> $artifacts_path/run-retropie.sh
 echo ""  >> $artifacts_path/run-retropie.sh
-echo "docker container stop \$container_name"  >> $artifacts_path/run-retropie.sh
-echo "docker container rm \$container_name"  >> $artifacts_path/run-retropie.sh
+echo "docker container stop \$container_short_name"  >> $artifacts_path/run-retropie.sh
+echo "docker container rm \$container_short_name"  >> $artifacts_path/run-retropie.sh
 echo ""  >> $artifacts_path/run-retropie.sh
 echo "docker run -it --rm --name=retropie \\" >> $artifacts_path/run-retropie.sh
 echo "  --privileged \\" >> $artifacts_path/run-retropie.sh
-echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
+#echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
 echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
 echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
