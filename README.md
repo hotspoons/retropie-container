@@ -25,6 +25,8 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
 
 # Quick install + run
 
+Please look at the notes and warnings section at the bottom for details regarding how to get input working in RetroArch. 
+
 Execute the following in a shell on your docker host to install and run this container:
 
 ## Install
@@ -101,9 +103,13 @@ To copy these assets out and extract them, perform the following (this assumes y
 
 ```bash
 
+# Make sure you have the container running
+docker run -it -d --name=retropie hotspoons/retropie-container # or  retropie-container:0.0.1 if built and tagged locally 
+
 mkdir -p ~/retropie-assets/configs && mkdir ~/retropie-assets/roms && cd ~/retropie-assets
-docker cp hotspoons/retropie-container:/home/pi/retropie-cfg.tar.gz retropie-cfg.tar.gz && tar -xvf retropie-cfg.tar.gz -C configs # or  - docker cp retropie-container:0.0.1:/home/pi/... if using a custom image
-docker cp hotspoons/retropie-container:/home/pi/retropie-roms.tar.gz retropie-roms.tar.gz && tar -xvf retropie-roms.tar.gz -C roms
+docker cp retropie:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar --skip-old-files -xvf ~/retropie-assets/retropie-cfg.tar.gz -C ~/retropie-assets/configs 
+docker cp retropie:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar --skip-old-files -xvf ~/retropie-assets/retropie-roms.tar.gz -C ~/retropie-assets/roms
+
 
 ```
 
@@ -130,21 +136,50 @@ roms_folder=/path/to/roms/folder
 bios_folder=/path/to/bios/folder
 config_folder=/path/to/persistent/config/folder
 container_name=hotspoons/retropie-container # or retropie-container:0.0.1 if built and tagged locally
+container_short_name=retropie
+nvargs=
 
+if grep -q "GPU Memory" <<< $(nvidia-smi); then
+   nvargs="--gpus all"
+fi
+
+docker container stop $container_short_name
+docker container rm $container_short_name
 
 docker run -it --rm --name=retropie \
   --privileged \
+  $nvargs \
   -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \
   -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
+  --net host \
+  -v /run/udev/control:/run/udev/control \
   -v /run/user/1000:/run/user/1000 \
   -v /dev/input:/dev/input \
   -v $roms_folder:/home/pi/RetroPie/roms \
   -v $bios_folder:/home/pi/RetroPie/BIOS \
   -v $config_folder:/opt/retropie/configs \
-  $container_name \
+  $custom_args \
+   $container_name \
   run
-
-  bash
 
 
 ```
+
+#Notes and warnings
+
+Because of bugs somewhere between RetroPie and Docker's forwarding of udev events, the udev driver for RetroArch does not work unless:
+ - You launch docker with the argument " --net host"
+ - You mount /run/udev/control folder as a volume in the container with the argument "-v /run/udev/control:/run/udev/control"
+ - You *unplug* and *replug* the controller every time you launch a game in a libretro emulator via RetroArch
+ - See https://stackoverflow.com/questions/49687378/how-to-get-hosts-udev-events-from-a-docker-container for more info
+ 
+A work-around is switching to the "linuxraw" Joypad driver (and losing the automatic bindings provided by Retropie, unfortunately) by:
+ - navigating to Retropie -> Retroarch -> Settings -> Drivers -> Joypad and selecting "linuxraw"
+ - while still in Retroarch, navigate to Settings -> Configuration -> Save Configuration on Exit (set to ON)
+ - Exit Retroarch
+ - Open Retroarch again, navigate to Settings -> Configuration -> Save Configuration on Exit (set to ON)
+ - Navigate to Settings -> Input -> Port 1 Binds
+ - Make sure your controller is listed under "Device Index"
+ - Open "Bind All" and setup your controller bindings.
+ - Exit Retroarch
+ 

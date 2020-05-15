@@ -1,2 +1,2 @@
 #!/bin/bash
-~/.config/retropie-container/run-retropie.sh -c "-v /media/import/media:/media/import/media --gpus all"	
+~/.config/retropie-container/run-retropie.sh -c " -v /media/import/media:/media/import/media"

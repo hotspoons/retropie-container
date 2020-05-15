@@ -3,7 +3,7 @@
 container_tag=retropie-container:0.0.1
 artifacts_path=~/.config/retropie-container
 container_name=retropie
-is_nvidia=
+nvidia_info=$(nvidia-smi)
 
 echo 
 printf "This is a no-frills, low resistence installation script for hotspoons/retropie-container. This assumes you have already installed docker on your \
@@ -19,7 +19,8 @@ echo
 printf "Would you like to continue? Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
 and your configuration will be stored in $artifacts_path/configs. After installation, you can run this container from a Desktop Linux session \
 by running the command \"$artifacts_path/run-retropie.sh\". You may provide additional arguments to the \"docker run\" command by providing \
-the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume --gpus all\" \n\n"
+the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume --net host \
+-v /run/udev/control:/run/udev/control \ --gpus all\" \n\n"
 
 
 
@@ -79,9 +80,13 @@ echo "docker container rm \$container_short_name"  >> $artifacts_path/run-retrop
 echo ""  >> $artifacts_path/run-retropie.sh
 echo "docker run -it --rm --name=retropie \\" >> $artifacts_path/run-retropie.sh
 echo "  --privileged \\" >> $artifacts_path/run-retropie.sh
-#echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
+if grep -q "GPU Memory" <<< $nvidia_info; then
+	echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
+fi
 echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
 echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
+echo "  --net host \\" >> $artifacts_path/run-retropie.sh
+echo "  -v /run/udev/control:/run/udev/control \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /dev/input:/dev/input \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$roms_folder:/home/pi/RetroPie/roms \\" >> $artifacts_path/run-retropie.sh
@@ -91,7 +96,7 @@ echo "  \$custom_args \\" >> $artifacts_path/run-retropie.sh
 echo "   \$container_name \\" >> $artifacts_path/run-retropie.sh
 echo "  run" >> $artifacts_path/run-retropie.sh
 echo " " >> $artifacts_path/run-retropie.sh
-echo " bash" >> $artifacts_path/run-retropie.sh
+
 
 echo   
 echo   
