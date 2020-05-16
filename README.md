@@ -165,7 +165,7 @@ docker run -it --rm --name=retropie \
 
 ```
 
-#Notes and warnings
+# Notes and warnings
 
 Because of bugs somewhere between RetroPie and Docker's forwarding of udev events, the udev driver for RetroArch does not work unless:
  - You launch docker with the argument " --net host"
