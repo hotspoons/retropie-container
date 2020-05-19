@@ -54,7 +54,7 @@ COPY utilities/runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstar
 RUN chmod +x /opt/retropie/configs/all/runcommand-onstart.sh 
 
 # Edit this file in your persistent storage to use all or part of the name provided from "lsusb" to reset the controller on each start 
-RUN touch /opt/retropie/configs/all/controller_names && chown pi:pi /opt/retropie/configs/all/controller_names
+RUN touch /opt/retropie/configs/all/controller_usb_ids && chown pi:pi /opt/retropie/configs/all/controller_usb_ids
 
 # and Installs RetroPie + optional modules declared in install.sh
 COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
