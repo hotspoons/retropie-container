@@ -87,6 +87,7 @@ echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_pat
 echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
 echo "  --net host \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/udev/control:/run/udev/control \\" >> $artifacts_path/run-retropie.sh
+echo "  -v /dev/bus/usb:/dev/bus/usb \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /dev/input:/dev/input \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$roms_folder:/home/pi/RetroPie/roms \\" >> $artifacts_path/run-retropie.sh
