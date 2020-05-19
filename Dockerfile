@@ -18,6 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -
       tzdata \
       usbutils \
       nano \
+      python-usb \
       software-properties-common
 
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
@@ -42,13 +43,14 @@ RUN cd RetroPie-Setup \
     && sudo ./retropie_packages.sh setup basic_install
     
     
-# Install USB resetting utility
-COPY reset_controller.py /usr/bin/reset_controller.py
-RUN chmod +x /usr/bin/reset_controller.py
+# Install USB controller resetting utility
+COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
+RUN chmod +x /opt/retropie/configs/all/reset_controller.py
+COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.sh
+RUN chmod +x /opt/retropie/configs/all/reset_controller.sh
 
 # And install script hooks
-
-COPY runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstart.sh 
+COPY utilities/runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstart.sh 
 RUN chmod +x /opt/retropie/configs/all/runcommand-onstart.sh 
 
 # Edit this file in your persistent storage to use all or part of the name provided from "lsusb" to reset the controller on each start 
