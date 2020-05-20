@@ -20,7 +20,7 @@ try:
         print("Should have reset " + vendor+ ":" + id)
 
 except Exception, msg:
-    print "failed to reset device:", msg3
+    print "failed to reset device:", msg
     
     
 

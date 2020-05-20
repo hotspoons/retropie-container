@@ -45,13 +45,10 @@ RUN cd RetroPie-Setup \
     
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
-RUN chmod +x /opt/retropie/configs/all/reset_controller.py
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.sh
-RUN chmod +x /opt/retropie/configs/all/reset_controller.sh
 
 # And install script hooks
 COPY utilities/runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstart.sh 
-RUN chmod +x /opt/retropie/configs/all/runcommand-onstart.sh 
 
 # Edit this file in your persistent storage to use all or part of the name provided from "lsusb" to reset the controller on each start 
 RUN touch /opt/retropie/configs/all/controller_usb_ids && chown pi:pi /opt/retropie/configs/all/controller_usb_ids
