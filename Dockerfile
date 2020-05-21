@@ -1,15 +1,8 @@
-FROM ubuntu:18.04 ##This should be per target architecture, including oddball for nvidia support 
-## Options are:
-##  ubuntu:18.04
-##  nvidia/opengl:base-ubuntu18.04
-##  arm32v7/ubuntu:18.04
-
-
-#ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display ##Required for nvidia
+FROM ubuntu:18.04
 
 ENV LANG C.UTF-8
 
-#RUN dpkg --add-architecture i386 ##Required for wine and PCSX2
+RUN dpkg --add-architecture i386
 
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y \
       ca-certificates git lsb-release sudo \
@@ -19,20 +12,20 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -
       vim \
       mesa-utils \
       libcap2-bin \
+      wine-stable \
       tzdata \
       usbutils \
       nano \
       python-usb \
-      software-properties-common \
-      #wine-stable ##Enable for wine on amd64
+      software-properties-common
 
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Installs PCSX2 daily from PPA
 
-#RUN add-apt-repository ppa:pcsx2-team/pcsx2-daily -y ##Enable for PCSX2 on amd64
+RUN add-apt-repository ppa:pcsx2-team/pcsx2-daily -y
 
-#RUN apt-get install -y pcsx2-unstable ##Enable for PCSX2 on amd64
+RUN apt-get install -y pcsx2-unstable
 
 RUN useradd -d /home/pi -G sudo -m pi
 
