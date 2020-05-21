@@ -1,8 +1,8 @@
 # Introduction
 
 This is a configurable build container for RetroPie based on [laseryuan's retropie container](https://github.com/laseryuan/docker-apps/tree/master/retropie).
-Currently this container targets AMD64 only, and this is meant for a full fledged installation of RetroPie plus the majority of addons/modules into an 
-Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA. 
+Currently this container targets AMD64, AMD64 with Nvidia proprietary graphics, and ARM32v7.  This is meant for a full fledged installation of 
+RetroPie plus the majority of addons/modules into an Ubuntu 18.04 environment, including wine and the PCSX2 emulator from the nightly PPA for AMD64. 
 
 **This will take a very very long time to build, like overnight**
 
@@ -11,14 +11,17 @@ Ubuntu 18.04 environment, including the PCSX2 emulator from the nightly PPA.
 
 # Prerequisites
 
- - Your host system must be an AMD64-based system (will gladly accept help with making this run on RPi! Would need to drop PCSX2 and wine though)
  - Your host system should have some sort of *nix OS with an X server running, or sufficient polyfill in Windows
+ - If using the basic AMD64 build:
+     - Use the "features/amd64" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/amd64)
+     - Or use "amd64" docker tag (e.g. docker pull hotspoons/retropie-container:amd64)
  - If using the NVIDIA proprietary driver:
      - Install and configure nvidia-docker for your system, see https://github.com/NVIDIA/nvidia-docker for details
-     - Clone the GitHub repo, e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container rpc && cd rpc
-     - Swtich to the "features/nvidia-support" branch, e.g. git checkout features/nvidia-support
-     - Follow the quick or manual build processes below
-     - A better solution will follow
+     - Use the "features/nvidia-support" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/nvidia-support)
+     - Or use "amd64-nvidia" docker tag (e.g. docker pull hotspoons/retropie-container:amd64-nvidia)
+ - If using the ARM32v7 build:
+     - Use the "features/arm32v7" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/arm32v7)
+     - Or use "arm32v7" docker tag (e.g. docker pull hotspoons/retropie-container:arm32v7)
  - You must have docker installed and running on your host system
  - The current user must have access to manage docker (e.g. member of "docker" group)
  - ROMs and BIOSes will help with making this setup useful
@@ -36,6 +39,7 @@ Execute the following in a shell on your docker host to install and run this con
 cd ~
 git clone https://github.com/hotspoons/retropie-container rpc
 cd rpc
+git checkout *target architecture branch name* #e.g. features/amd64, features/nvidia-support, or features/arm32v7
 # If you were to customize the modules that are installed, you would do it here by editing "addons.cfg", then continue with the next step
 chmod +x quick_install.sh
 ./quick_install.sh
@@ -47,6 +51,7 @@ chmod +x quick_install.sh
 
 ```bash
 
+# You may provide additional custom arguments to the docker command using the "-c" flag, e.g. '-c " -v /media/import/media:/media/import/media"'
 ~/.config/retropie-container/run-retropie.sh
 
 ```
@@ -170,16 +175,21 @@ docker run -it --rm --name=retropie \
 Because of bugs somewhere between RetroPie and Docker's forwarding of udev events, the udev driver for RetroArch does not work unless:
  - You launch docker with the argument " --net host"
  - You mount /run/udev/control folder as a volume in the container with the argument "-v /run/udev/control:/run/udev/control"
- - You *unplug* and *replug* the controller every time you launch a game in a libretro emulator via RetroArch
+ - You *unplug* and *replug* the controller every time you launch a game in a libretro emulator via RetroArch (a work around for this follows)
  - See https://stackoverflow.com/questions/49687378/how-to-get-hosts-udev-events-from-a-docker-container for more info
  
-A work-around is switching to the "linuxraw" Joypad driver (and losing the automatic bindings provided by Retropie, unfortunately) by:
- - navigating to Retropie -> Retroarch -> Settings -> Drivers -> Joypad and selecting "linuxraw"
- - while still in Retroarch, navigate to Settings -> Configuration -> Save Configuration on Exit (set to ON)
- - Exit Retroarch
- - Open Retroarch again, navigate to Settings -> Configuration -> Save Configuration on Exit (set to ON)
- - Navigate to Settings -> Input -> Port 1 Binds
- - Make sure your controller is listed under "Device Index"
- - Open "Bind All" and setup your controller bindings.
- - Exit Retroarch
+I created a combination of bash and python scripts as part of this container's source code repo that will soft-reset all configured 
+USB controllers (see below) every time that RetroArch is started. This effectively works around the issue above, but may have unintended
+consequences, so beware.  
  
+If you use the quick install script, a work-around is installed for you that requires you to only add the USB IDs, 1 per line, of 
+each controller you wish to use to the file **$$config_folder**$/all/controller_usb_ids. For example, my controller_usb_ids file contains 
+1 line with the contents "045e:02dd" that I found by running "lsusb" on the host and finding the line that corresponds with "Microsoft Corp. 
+Xbox One Controller (Firmware 2015)". 
+
+If you are using an off-the-shelf image from docker hub, you will need to manually install the work-arounds into the persistent configuration 
+storage folder. Copy the files "utilites/reset_controller.py", "utilites/reset_controller.sh", and "utilites/runcommand-onstart.sh" to the folder 
+**$config_folder**/all/ (/opt/retropie/configs/all in the container) from this source code repository and make all 3 of those files executable
+(e.g. chmod +x **$config_folder**/all/reset_controller.py && chmod +x **$config_folder**/all/reset_controller.sh && chmod +x 
+**$config_folder**/all/runcommand-onstart.sh). Then create a file named controller_usb_ids in the folder **$$config_folder**$/all/ and add the
+USB IDs of each of the controllers you wish to use, one per line, per the instructions above.
