@@ -1,4 +1,4 @@
-FROM nvidia/opengl:base-ubuntu18.04
+FROM ubuntu:18.04
 
 ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display
 
