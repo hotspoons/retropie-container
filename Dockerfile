@@ -42,10 +42,16 @@ RUN cd RetroPie-Setup \
     && sudo chmod +x retropie_setup.sh \
     && sudo ./retropie_packages.sh setup basic_install
     
-    
+# and Installs RetroPie + optional modules declared in install.sh
+COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
+COPY --chown=pi addons.cfg /tmp/addons.cfg
+COPY --chown=pi post_install.sh /tmp/post_install.sh
+
+RUN bash /tmp/install_retropie_addons.sh
+
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
-COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.sh
+COPY utilities/reset_controller.sh /opt/retropie/configs/all/reset_controller.sh
 
 # And install script hooks
 COPY utilities/runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstart.sh 
@@ -53,13 +59,6 @@ COPY utilities/runcommand-onstart.sh /opt/retropie/configs/all/runcommand-onstar
 # Edit this file in your persistent storage to use all or part of the name provided from "lsusb" to reset the controller on each start 
 RUN touch /opt/retropie/configs/all/controller_usb_ids && chown pi:pi /opt/retropie/configs/all/controller_usb_ids
 
-# and Installs RetroPie + optional modules declared in install.sh
-COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
-COPY --chown=pi addons.cfg /tmp/addons.cfg
-COPY --chown=pi post_install.sh /tmp/post_install.sh
-
-
-RUN bash /tmp/install_retropie_addons.sh
 RUN bash /tmp/post_install.sh
 
 COPY --chown=pi ./docker-entrypoint.sh /

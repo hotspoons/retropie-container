@@ -4,7 +4,7 @@ do
 	sleep 1
 done
 
-sleep 3	
+sleep 2	
 
 declare -a controller_usb_ids
 readarray controller_usb_ids < /opt/retropie/configs/all/controller_usb_ids
