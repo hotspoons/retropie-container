@@ -1,4 +1,4 @@
-FROM arm32v7/ubuntu:18.04
+FROM arm32v7/debian:buster-slim
 
 ENV LANG C.UTF-8
 
@@ -14,6 +14,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -
       usbutils \
       nano \
       python-usb \
+      wget \
+      gnupg2 \
       software-properties-common
 
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
@@ -21,6 +23,10 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigu
 RUN useradd -d /home/pi -G sudo -m pi
 
 RUN echo "pi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/pi
+
+RUN wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -
+RUN echo "deb http://archive.raspberrypi.org/debian/ buster main" >> /etc/apt/sources.list
+RUN apt-get update
 
 WORKDIR /home/pi
 
@@ -37,6 +43,8 @@ COPY --chown=pi addons.cfg /tmp/addons.cfg
 COPY --chown=pi post_install.sh /tmp/post_install.sh
 
 RUN bash /tmp/install_retropie_addons.sh
+
+RUN bash rm -rf /home/pi/RetroPie-Setup/tmp/
 
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
