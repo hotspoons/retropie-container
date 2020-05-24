@@ -39,7 +39,8 @@ RUN git clone --depth=1 https://github.com/RetroPie/RetroPie-Setup.git
 RUN cd RetroPie-Setup \
     && sudo chmod +x retropie_setup.sh \
     && sudo ./retropie_packages.sh setup basic_install \
-    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/
+    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
+    && sudo apt-get clean
     
 # and Installs RetroPie + optional modules declared in install.sh
 COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
@@ -47,7 +48,8 @@ COPY --chown=pi addons.cfg /tmp/addons.cfg
 COPY --chown=pi post_install.sh /tmp/post_install.sh
 
 RUN bash /tmp/install_retropie_addons.sh \
-    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/
+    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
+    && sudo apt-get clean
 
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
