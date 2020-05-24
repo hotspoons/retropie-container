@@ -49,6 +49,8 @@ COPY --chown=pi post_install.sh /tmp/post_install.sh
 
 RUN bash /tmp/install_retropie_addons.sh
 
+RUN bash rm -rf /home/pi/RetroPie-Setup/tmp/
+
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
 COPY utilities/reset_controller.sh /opt/retropie/configs/all/reset_controller.sh
