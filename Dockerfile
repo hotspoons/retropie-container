@@ -47,7 +47,9 @@ COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
 COPY --chown=pi addons.cfg /tmp/addons.cfg
 COPY --chown=pi post_install.sh /tmp/post_install.sh
 
-RUN bash /tmp/install_retropie_addons.sh
+RUN bash /tmp/install_retropie_addons.sh \
+    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
+    && sudo apt-get clean
 
 RUN sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
     && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
