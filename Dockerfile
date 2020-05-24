@@ -51,11 +51,6 @@ RUN bash /tmp/install_retropie_addons.sh \
     && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
     && sudo apt-get clean
 
-RUN sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
-    && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
-    && sudo apt-get clean
-
-
 # Install USB controller resetting utility
 COPY utilities/reset_controller.py /opt/retropie/configs/all/reset_controller.py
 COPY utilities/reset_controller.sh /opt/retropie/configs/all/reset_controller.sh
