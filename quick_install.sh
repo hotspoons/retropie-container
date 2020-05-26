@@ -81,7 +81,7 @@ docker container rm $container_name
 echo "" > $artifacts_path/run-retropie.sh
 echo "#!/bin/bash" >> $artifacts_path/run-retropie.sh
 echo "" >> $artifacts_path/run-retropie.sh
-echo "help()" >> $artifacts_path/run-retropie.sh
+echo "help\(\)" >> $artifacts_path/run-retropie.sh
 echo "{" >> $artifacts_path/run-retropie.sh
 echo "   echo \"\"" >> $artifacts_path/run-retropie.sh
 echo "   echo \"Usage: $0 -h -c *custom arguments for docker run command\"" >> $artifacts_path/run-retropie.sh
