@@ -12,16 +12,6 @@ RetroPie plus the majority of addons/modules into an Ubuntu 18.04 environment, i
 # Prerequisites
 
  - Your host system should have some sort of *nix OS with an X server running, or sufficient polyfill in Windows
- - If using the basic AMD64 build:
-     - Use the "features/amd64" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/amd64)
-     - Or use "amd64" docker tag (e.g. docker pull hotspoons/retropie-container:amd64)
- - If using the NVIDIA proprietary driver:
-     - Install and configure nvidia-docker for your system, see https://github.com/NVIDIA/nvidia-docker for details
-     - Use the "features/nvidia-support" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/nvidia-support)
-     - Or use "amd64-nvidia" docker tag (e.g. docker pull hotspoons/retropie-container:amd64-nvidia)
- - If using the ARM32v7 build:
-     - Use the "features/arm32v7" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/arm32v7)
-     - Or use "arm32v7" docker tag (e.g. docker pull hotspoons/retropie-container:arm32v7)
  - You must have docker installed and running on your host system
  - The current user must have access to manage docker (e.g. member of "docker" group)
  - If you use the proprietary Nvidia graphics drivers, you will need to install and configure nvidia-docker (see these instructions: https://github.com/NVIDIA/nvidia-docker)
