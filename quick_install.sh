@@ -93,10 +93,10 @@ echo "" >> $artifacts_path/run-retropie.sh
 echo "while getopts \":hc:\" opt" >> $artifacts_path/run-retropie.sh
 echo "do" >> $artifacts_path/run-retropie.sh
 echo "   case "\$opt" in" >> $artifacts_path/run-retropie.sh
-echo "      h ) help; exit 0 ;;" >> $artifacts_path/run-retropie.sh
-echo "      c ) custom_args=\"\$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
-echo "      :) echo \"missing argument for option -$OPTARG\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
-echo "      \?) echo \"didnt' get that\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
+echo "      h \) help; exit 0 ;;" >> $artifacts_path/run-retropie.sh
+echo "      c \) custom_args=\"\$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
+echo "      :\) echo \"missing argument for option -$OPTARG\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
+echo "      \?\) echo \"didnt' get that\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
 echo "   esac" >> $artifacts_path/run-retropie.sh
 echo "done" >> $artifacts_path/run-retropie.sh
 echo "" >> $artifacts_path/run-retropie.sh
