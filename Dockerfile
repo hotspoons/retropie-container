@@ -43,9 +43,9 @@ RUN cd RetroPie-Setup \
     && sudo apt-get clean
     
 # and Installs RetroPie + optional modules declared in install.sh
-COPY --chown=pi install_retropie_addons.sh /tmp/install_retropie_addons.sh
-COPY --chown=pi addons.cfg /tmp/addons.cfg
-COPY --chown=pi post_install.sh /tmp/post_install.sh
+COPY --chown=pi install_scripts/install_retropie_addons.sh /tmp/install_retropie_addons.sh
+COPY --chown=pi install_scripts/addons.cfg /tmp/addons.cfg
+COPY --chown=pi install_scripts/post_install.sh /tmp/post_install.sh
 
 RUN bash /tmp/install_retropie_addons.sh \
     && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
@@ -63,7 +63,7 @@ RUN touch /opt/retropie/configs/all/controller_usb_ids && chown pi:pi /opt/retro
 
 RUN bash /tmp/post_install.sh
 
-COPY --chown=pi ./docker-entrypoint.sh /
+COPY --chown=pi install_scripts/docker-entrypoint.sh /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["run"]
