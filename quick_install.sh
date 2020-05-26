@@ -16,29 +16,34 @@ arm_tag="arm32v7"
 tmp_folder="/tmp"
 tag=""
 
-if [ -z "$is_amd64" ] && [ -z "$is_arm" ] then
+if [ -z "$is_amd64" ] && [ -z "$is_arm" ] 
+then
     printf "Either an AMD64 or ARMv7 or newer compatible host is required to run and install this container"
     exit 1
 else
-    if [ -z "$is_amd64" ] then
+    if [ -z "$is_amd64" ] 
+    then
         tag=$arm_tag
     else
     	tag=$nvidia_tag
     fi
 fi
 
-if [ -z "$is_git_installed" ] then
+if [ -z "$is_git_installed" ] 
+then
     printf "\"git\" must be installed to install this container and runtime. Please install git on your host OS and try again."
     exit 1
 fi
 
-if [ -z "$is_docker_installed" ] then
+if [ -z "$is_docker_installed" ] 
+then
     printf "\"docker\" must be installed, running, and accessible to the current user (e.g. current user must be a member \
 of the \"docker\" group). Please check your docker setup and try this again."
     exit 1
 fi
 
-if [ -z "$is_nvidia" ] then
+if [ -z "$is_nvidia" ] 
+then
    printf "It appears you are running the proprietary Nvidia graphics driver on your host. Before you run this container, ensure that \
 you have installed and configured nvidia docker (see this: https://github.com/NVIDIA/nvidia-docker for instructions), or else \
 the container may not start"
@@ -54,7 +59,7 @@ git checkout $installer_branch
 printf "Starting installation process in 5 seconds. Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
 and your configuration will be stored in $artifacts_path/configs. After installation, you can run this container from a Desktop Linux session \
 by running the command \"$artifacts_path/run-retropie.sh\". You may provide additional arguments to the \"docker run\" command by providing \
-the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume " \n\n"
+the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume \" \n\n"
 
 sleep 5
 mkdir -p $artifacts_path/bios
