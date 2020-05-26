@@ -59,7 +59,7 @@ git checkout $installer_branch
 printf "Starting installation process in 5 seconds. Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
 and your configuration will be stored in $artifacts_path/configs. After installation, you can run this container from a Desktop Linux session \
 by running the command \"$artifacts_path/run-retropie.sh\". You may provide additional arguments to the \"docker run\" command by providing \
-the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume " \n\n"
+the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume \" \n\n"
 
 sleep 5
 mkdir -p $artifacts_path/bios
@@ -81,7 +81,7 @@ docker container rm $container_name
 echo "" > $artifacts_path/run-retropie.sh
 echo "#!/bin/bash" >> $artifacts_path/run-retropie.sh
 echo "" >> $artifacts_path/run-retropie.sh
-echo "help\(\)" >> $artifacts_path/run-retropie.sh
+echo "help()" >> $artifacts_path/run-retropie.sh
 echo "{" >> $artifacts_path/run-retropie.sh
 echo "   echo \"\"" >> $artifacts_path/run-retropie.sh
 echo "   echo \"Usage: $0 -h -c *custom arguments for docker run command\"" >> $artifacts_path/run-retropie.sh
@@ -93,10 +93,10 @@ echo "" >> $artifacts_path/run-retropie.sh
 echo "while getopts \":hc:\" opt" >> $artifacts_path/run-retropie.sh
 echo "do" >> $artifacts_path/run-retropie.sh
 echo "   case "\$opt" in" >> $artifacts_path/run-retropie.sh
-echo "      h \) help\; exit 0 \;\;" >> $artifacts_path/run-retropie.sh
-echo "      c \) custom_args=\"\$OPTARG\" \;\;" >> $artifacts_path/run-retropie.sh
-echo "      :\) echo \"missing argument for option -$OPTARG\"\; exit 1 \;\;" >> $artifacts_path/run-retropie.sh
-echo "      \?\) echo \"did not get that\"\; exit 1 \;\;" >> $artifacts_path/run-retropie.sh
+echo "      h ) help; exit 0 ;;" >> $artifacts_path/run-retropie.sh
+echo "      c ) custom_args=\"\$OPTARG\" ;;" >> $artifacts_path/run-retropie.sh
+echo "      :) echo \"missing argument for option -$OPTARG\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
+echo "      \?) echo \"didnt' get that\"; exit 1 ;;" >> $artifacts_path/run-retropie.sh
 echo "   esac" >> $artifacts_path/run-retropie.sh
 echo "done" >> $artifacts_path/run-retropie.sh
 echo "" >> $artifacts_path/run-retropie.sh
@@ -134,4 +134,4 @@ echo
 echo   
 echo   
 echo "If there were no errors, installation is now complete. You can add additional ROMs and BIOS images to the folders $artifacts_path/roms, BIOS and $artifacts_path/bios.\
- And you may run this RetroPie container by executing \"$artifacts_path/run-retropie.sh\" in a Desktop \(e.g. X session\)"
+ And you may run this RetroPie container by executing \"$artifacts_path/run-retropie.sh\" in a Desktop (e.g. X session)"
