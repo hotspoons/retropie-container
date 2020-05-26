@@ -111,7 +111,7 @@ echo "docker container rm \$container_short_name"  >> $artifacts_path/run-retrop
 echo ""  >> $artifacts_path/run-retropie.sh
 echo "docker run -it --rm --name=retropie \\" >> $artifacts_path/run-retropie.sh
 echo "  --privileged \\" >> $artifacts_path/run-retropie.sh
-if grep -q "GPU Memory" <<< $nvidia_info; then
+if echo $nvidia_info | grep -q "GPU Memory"; then
 	echo "  --gpus all \\"  >> $artifacts_path/run-retropie.sh
 fi
 echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
