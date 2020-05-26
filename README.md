@@ -1,7 +1,7 @@
 # Introduction
 
 This is a configurable build container for RetroPie based on [laseryuan's retropie container](https://github.com/laseryuan/docker-apps/tree/master/retropie).
-Currently this container targets AMD64, AMD64 with Nvidia proprietary graphics, and ARM32v7.  This is meant for a full fledged installation of 
+Currently this container targets AMD64 (including Nvidia proprietary graphics if necessary), and ARM32v7.  This is meant for a full fledged installation of 
 RetroPie plus the majority of addons/modules into an Ubuntu 18.04 environment, including wine and the PCSX2 emulator from the nightly PPA for AMD64. 
 
 **This will take a very very long time to build, like overnight**
@@ -12,39 +12,48 @@ RetroPie plus the majority of addons/modules into an Ubuntu 18.04 environment, i
 # Prerequisites
 
  - Your host system should have some sort of *nix OS with an X server running, or sufficient polyfill in Windows
- - If using the basic AMD64 build:
-     - Use the "features/amd64" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/amd64)
-     - Or use "amd64" docker tag (e.g. docker pull hotspoons/retropie-container:amd64)
- - If using the NVIDIA proprietary driver:
-     - Install and configure nvidia-docker for your system, see https://github.com/NVIDIA/nvidia-docker for details
-     - Use the "features/nvidia-support" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/nvidia-support)
-     - Or use "amd64-nvidia" docker tag (e.g. docker pull hotspoons/retropie-container:amd64-nvidia)
- - If using the ARM32v7 build:
-     - Use the "features/arm32v7" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/arm32v7)
-     - Or use "arm32v7" docker tag (e.g. docker pull hotspoons/retropie-container:arm32v7)
  - You must have docker installed and running on your host system
  - The current user must have access to manage docker (e.g. member of "docker" group)
- - ROMs and BIOSes will help with making this setup useful
+ - If you use the proprietary Nvidia graphics drivers, you will need to install and configure nvidia-docker (see these instructions: https://github.com/NVIDIA/nvidia-docker)
+ - ROMs and BIOSes will help with making this setup useful 
 
-# Quick install + run
+
+# Quick install, configure, and run
 
 Please look at the notes and warnings section at the bottom for details regarding how to get input working in RetroArch. 
 
+## Quick Install
+
 Execute the following in a shell on your docker host to install and run this container:
 
-## Install
+```bash
+# or "curl -o quick_install.sh https://github.com/hotspoons/retropie-container/raw/features/base/quick_install.sh"
+wget https://github.com/hotspoons/retropie-container/raw/features/base/quick_install.sh 
+
+# This will test for prerequisites before attempting to fetch and configure the container. It will warn for Nvidia docker as well if it detects 
+# the nvidia proprietary driver.
+sh quick_install.sh
+
+```
+
+## Configure
+
+See the "Notes and Warnings" section at the bottom for more information, but you will need to place the USB IDs of each controller you wish
+to use in this container, one per line, in the file ~/.config/retropie-container/configs/all/controller_usb_ids. To get the USB IDs, run the
+"lsusb" command on your host, then place the ID listed for each device into the file listed below. For example:
 
 ```bash
+rich@rich-dell:~$ lsusb 
+...
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 002: ID 045e:02dd Microsoft Corp. Xbox One Controller (Firmware 2015)
+...
+```
 
-cd ~
-git clone https://github.com/hotspoons/retropie-container rpc
-cd rpc
-git checkout *target architecture branch name* #e.g. features/amd64, features/nvidia-support, or features/arm32v7
-# If you were to customize the modules that are installed, you would do it here by editing "addons.cfg", then continue with the next step
-chmod +x quick_install.sh
-./quick_install.sh
-# And now you will wait for several hours for the build process to complete
+I would place the following contents in the "controller_usb_ids" file for my Xbox One conntroller:
 
+```bash
+045e:02dd
 ```
 
 ## Run
@@ -58,58 +67,49 @@ chmod +x quick_install.sh
 
 # Manual installation and configuration
 
-If the default choices provided by the quick install script aren't suitable for your needs or you are afraid to edit the script, 
-keep reading.
+If you wish to build this image locally and/or edit which RetroPie packages are installed, you will need to clone the GitHub repository,
+check out the correct branch, edit your module selection, then use the "custom_install.sh" script, or manually configure the persistent
+storage and scripts per the instructions below.
 
-## Building the default configuration
+## Target architectures
 
-To pull and build the image locally using default settings (which includes almost everything available in RetroPie, plus PCSX2 and Wine), 
-run the following, then skip the next section:
+ - If using the basic AMD64 build:
+     - Use the "features/amd64-nvidia" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/amd64-nvidia)
+     - Or use "amd64-nvidia" docker tag (e.g. docker pull hotspoons/retropie-container:amd64-nvidia)
+ - If using the NVIDIA proprietary driver:
+     - Install and configure nvidia-docker for your system, see https://github.com/NVIDIA/nvidia-docker for details
+     - Use the "features/amd64-nvidia" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/amd64-nvidia)
+     - Or use "amd64-nvidia" docker tag (e.g. docker pull hotspoons/retropie-container:amd64-nvidia)
+ - If using the ARM32v7 build:
+     - Use the "features/arm32v7" branch for manual builds/customization (e.g. cd ~ && git clone https://github.com/hotspoons/retropie-container && cd retropie-container && git checkout features/arm32v7)
+     - Or use "arm32v7" docker tag (e.g. docker pull hotspoons/retropie-container:arm32v7)
 
-```bash
+## Customizing RetroPie addons
 
-docker run --rm hotspoons/retropie-container
+To modify which modules/addons are built,modify the "addons.cfg" file to include or exclude modules as desired, found here: https://retropie.org.uk/forum/topic/23317/creating-shell-script-for-installing-everything
 
-```
+## Building and installing after customization
 
-
-## Customizing
-
-Yes, I know this breaks the core tenet of repeatabile, portable builds for docker images, but you wouldn't be looking here if this was your primary concern :).
-
-To modify which modules/addons are built, clone the git repository:
-
-```bash
-
-cd ~
-git clone https://github.com/hotspoons/retropie-container.git
-
-cd retropie-container
-
-```
-
-Modify the "addons.cfg" file to include or exclude modules as desired, found here: https://retropie.org.uk/forum/topic/23317/creating-shell-script-for-installing-everything
-
-Then build and tag the repository locally (in this example, with the tag "retropie-container:0.0.1"):
+If you are okay with the default locations for persistent artifacts and scripts, run the "custom_install.sh" script from the correct git branch (
+features/amd64-nvidia or features/arm32v7) like so, presuming you are currently in the cloned repository's local directory:
 
 ```bash
-
-docker build --tag retropie-container:0.0.1 .
-
+sh ./custom_install.sh
+# And input "Y" when prompted
 ```
 
 ## Persistence and Artifacts
 
-You will need to extract the RetroPie configuration for all modules that were built, as well as assets that were stored in the *RetroPie/roms* folder for
-ports and other non-core/base runtimes from the image after building is completed. As part of the build process, these are archived in the image under 
-*/home/pi/retropie-cfg.tar.gz* and */home/pi/retropie-roms.tar.gz* respectively.
+If the default setup does not suit your needs, you will need to extract the RetroPie configuration for all modules that were built, as well as assets 
+that were stored in the *RetroPie/roms* folder for ports and other non-core/base runtimes from the image after building is completed. As part of the 
+build process, these are archived in the image under */home/pi/retropie-cfg.tar.gz* and */home/pi/retropie-roms.tar.gz* respectively.
 
 To copy these assets out and extract them, perform the following (this assumes you want to copy and extract these to the folder ~/retropie-assets/; adjust these steps for your enviornment):
 
 ```bash
 
 # Make sure you have the container running
-docker run -it -d --name=retropie hotspoons/retropie-container # or  retropie-container:0.0.1 if built and tagged locally 
+docker run -it -d --name=retropie hotspoons/retropie-container # or  retropie-container:local if built and tagged locally 
 
 mkdir -p ~/retropie-assets/configs && mkdir ~/retropie-assets/roms && cd ~/retropie-assets
 docker cp retropie:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar --skip-old-files -xvf ~/retropie-assets/retropie-cfg.tar.gz -C ~/retropie-assets/configs 
@@ -140,7 +140,7 @@ To run the default image, either execute the following in a shell, or create a s
 roms_folder=/path/to/roms/folder
 bios_folder=/path/to/bios/folder
 config_folder=/path/to/persistent/config/folder
-container_name=hotspoons/retropie-container # or retropie-container:0.0.1 if built and tagged locally
+container_name=hotspoons/retropie-container # or retropie-container:local if built and tagged locally
 container_short_name=retropie
 nvargs=
 

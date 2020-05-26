@@ -1,62 +1,37 @@
 #!/bin/bash
 
+container_tag=retropie-container:local
 artifacts_path=~/.config/retropie-container
-container_name="retropie"
+container_name=retropie
 nvidia_info=$(nvidia-smi)
-is_nvidia=$(nvidia-smi | grep -w "GPU Memory")
-is_amd64=$(uname -m | grep -i -w "x86_64\|amd64\|x64")
-is_arm=$(uname -m | grep -i -w "aarch64\|armv7l\|arm64\|arm64v8\|armv8b\|armv8l")
-is_git_installed=$(which git)
-is_docker_installed=$(docker ps | grep "CONTAINER ID")
-retropie_container_repo="https://github.com/hotspoons/retropie-container.git"
-installer_branch="features/base"
-docker_repo="hotspoons/retropie-container"
-nvidia_tag="amd64-nvidia"
-arm_tag="arm32v7"
-tmp_folder="/tmp"
-tag=""
 
-if [ -z "$is_amd64" ] && [ -z "$is_arm" ] then
-    printf "Either an AMD64 or ARMv7 or newer compatible host is required to run and install this container"
-    exit 1
-else
-    if [ -z "$is_amd64" ] then
-        tag=$arm_tag
-    else
-    	tag=$nvidia_tag
-    fi
-fi
-
-if [ -z "$is_git_installed" ] then
-    printf "\"git\" must be installed to install this container and runtime. Please install git on your host OS and try again."
-    exit 1
-fi
-
-if [ -z "$is_docker_installed" ] then
-    printf "\"docker\" must be installed, running, and accessible to the current user (e.g. current user must be a member \
-of the \"docker\" group). Please check your docker setup and try this again."
-    exit 1
-fi
-
-if [ -z "$is_nvidia" ] then
-   printf "It appears you are running the proprietary Nvidia graphics driver on your host. Before you run this container, ensure that \
-you have installed and configured nvidia docker (see this: https://github.com/NVIDIA/nvidia-docker for instructions), or else \
-the container may not start"
-fi
-
-cd $tmp_folder
-rm -rf rpc
-git clone $retropie_container_repo rpc
-cd rpc
-git checkout $installer_branch
-
-
-printf "Starting installation process in 5 seconds. Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
+echo 
+printf "Please ensure you are on the correct git branch to match your architecture before continuing (git status -> should print \"features/amd64-nvidia\" \
+for AMD64, including Nvidia proprietary driver support; or \"features/arm32v7\" for arm-base hosts). This assumes you have already installed docker on your \
+host and have it configured to pull from the main docker hub. This also assumes that you will be running the docker container as the current user; \
+you will be storing persistent artifacts for this container in the folder $artifacts_path; and you are okay with the container being registered \
+locally as \"$container_tag\". This script is dumb and may break things, delete your files, and insult your mother. You have been warned." 
+echo
+echo
+printf "If you wish to customize which packages are installed and have not yet made your choices, enter \"N\" below and add or remove selections from \
+addons.cfg, then re-run this script" 
+echo
+echo
+printf "Would you like to continue? Your ROMs will need to be copied to $artifacts_path/roms, BIOS to $artifacts_path/bios, \
 and your configuration will be stored in $artifacts_path/configs. After installation, you can run this container from a Desktop Linux session \
 by running the command \"$artifacts_path/run-retropie.sh\". You may provide additional arguments to the \"docker run\" command by providing \
-the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume " \n\n"
+the value in quotes after a \"-c\" argument, for example:\n\nrun-retropie.sh -c \"-v /path/to/volume:/path/to/volume --net host \
+-v /run/udev/control:/run/udev/control \ --gpus all\" \n\n"
 
-sleep 5
+
+
+read -p $"Enter \"Y\" to proceed`echo $'\n> '`"  -n 1 -r
+echo       
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
+
 mkdir -p $artifacts_path/bios
 mkdir -p $artifacts_path/roms
 mkdir -p $artifacts_path/configs
@@ -65,9 +40,9 @@ touch $artifacts_path/run-retropie.sh && chmod +x $artifacts_path/run-retropie.s
 # In case the container was previously created or a step failed, stop it and remove it
 docker container stop  $container_name
 docker container rm $container_name
-docker pull $docker_repo:$tag
 
-docker run -it -d --name=$container_name $docker_repo:$tag
+docker build --tag $container_tag .
+docker run -it -d --name=retropie  $container_tag 
 docker cp $container_name:/home/pi/retropie-cfg.tar.gz $artifacts_path/retropie-cfg.tar.gz && tar --skip-old-files -xvf $artifacts_path/retropie-cfg.tar.gz -C $artifacts_path/configs 
 docker cp $container_name:/home/pi/retropie-roms.tar.gz $artifacts_path/retropie-roms.tar.gz && tar --skip-old-files -xvf $artifacts_path/retropie-roms.tar.gz -C $artifacts_path/roms
 docker container stop  $container_name
@@ -98,7 +73,7 @@ echo "" >> $artifacts_path/run-retropie.sh
 echo "roms_folder=$artifacts_path/roms" >> $artifacts_path/run-retropie.sh
 echo "bios_folder=$artifacts_path/bios" >> $artifacts_path/run-retropie.sh
 echo "config_folder=$artifacts_path/configs" >> $artifacts_path/run-retropie.sh
-echo "container_name=$docker_repo:$tag" >> $artifacts_path/run-retropie.sh
+echo "container_name=$container_tag" >> $artifacts_path/run-retropie.sh
 echo "container_short_name=$container_name" >> $artifacts_path/run-retropie.sh
 echo ""  >> $artifacts_path/run-retropie.sh
 echo "docker container stop \$container_short_name"  >> $artifacts_path/run-retropie.sh
