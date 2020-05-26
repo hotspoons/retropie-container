@@ -134,4 +134,4 @@ echo
 echo   
 echo   
 echo "If there were no errors, installation is now complete. You can add additional ROMs and BIOS images to the folders $artifacts_path/roms, BIOS and $artifacts_path/bios.\
- And you may run this RetroPie container by executing \"$artifacts_path/run-retropie.sh\" in a Desktop (e.g. X session)"
+ And you may run this RetroPie container by executing \"$artifacts_path/run-retropie.sh\" in a Desktop \(e.g. X session\)"
