@@ -26,16 +26,16 @@ RUN echo "pi ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/pi
 
 RUN wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -
 RUN echo "deb http://archive.raspberrypi.org/debian/ buster main" >> /etc/apt/sources.list
-RUN apt-get update
+RUN apt-get update && apt-get clean
 
 WORKDIR /home/pi
 
 USER pi
 
-RUN git clone --depth=1 https://github.com/RetroPie/RetroPie-Setup.git
+RUN git clone  --depth=1 https://github.com/RetroPie/RetroPie-Setup.git
 RUN cd RetroPie-Setup \
     && sudo chmod +x retropie_setup.sh \
-    && sudo ./retropie_packages.sh setup basic_install\
+    && sudo __platform=rpi3 ./retropie_packages.sh setup basic_install\
     && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
     && sudo apt-get clean
     
@@ -44,7 +44,7 @@ COPY --chown=pi install_scripts/install_retropie_addons.sh /tmp/install_retropie
 COPY --chown=pi install_scripts/addons.cfg /tmp/addons.cfg
 COPY --chown=pi install_scripts/post_install.sh /tmp/post_install.sh
 
-RUN bash /tmp/install_retropie_addons.sh\
+RUN __platform=rpi3 bash /tmp/install_retropie_addons.sh\
     && sudo rm -rf /home/pi/RetroPie-Setup/tmp/ \
     && sudo apt-get clean
 
