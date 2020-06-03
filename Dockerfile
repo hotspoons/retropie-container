@@ -62,5 +62,7 @@ RUN bash /tmp/post_install.sh
 
 COPY --chown=pi install_scripts/docker-entrypoint.sh /
 
+RUN sudo apt-get install -y libgl1-mesa-glx libgl1-mesa-dri && sudo apt-get clean
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["run"]

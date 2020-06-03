@@ -4,6 +4,7 @@
 main() {
   case "$1" in
     run)
+      sudo chgrp -R video /dev/dri
       emulationstation
       ;;
     help)
