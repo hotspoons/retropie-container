@@ -117,6 +117,16 @@ fi
 echo "  -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \\" >> $artifacts_path/run-retropie.sh
 echo "  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \\" >> $artifacts_path/run-retropie.sh
 echo "  --net host \\" >> $artifacts_path/run-retropie.sh
+if [ $tag == $arm_tag ]; then
+        echo "  -v /opt/vc:/opt/vc \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /var/run/dbus/:/var/run/dbus/ \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /dev/snd:/dev/snd \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /dev/vchiq:/dev/vchiq \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /dev/vcio:/dev/vcio \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /dev/fb0:/dev/fb0 \\" >> $artifacts_path/run-retropie.sh
+        echo "  -v /dev/vcsm:/dev/vcsm \\" >> $artifacts_path/run-retropie.sh
+        echo "  --device=/dev/dri \\" >> $artifacts_path/run-retropie.sh
+fi
 echo "  -v /run/udev/control:/run/udev/control \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /dev/bus/usb:/dev/bus/usb \\" >> $artifacts_path/run-retropie.sh
 echo "  -v /run/user/1000:/run/user/1000 \\" >> $artifacts_path/run-retropie.sh
@@ -124,6 +134,7 @@ echo "  -v /dev/input:/dev/input \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$roms_folder:/home/pi/RetroPie/roms \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$bios_folder:/home/pi/RetroPie/BIOS \\" >> $artifacts_path/run-retropie.sh
 echo "  -v \$config_folder:/opt/retropie/configs \\" >> $artifacts_path/run-retropie.sh
+echo "  --group-add video \\" >> $artifacts_path/run-retropie.sh
 echo "  \$custom_args \\" >> $artifacts_path/run-retropie.sh
 echo "   \$container_name \\" >> $artifacts_path/run-retropie.sh
 echo "  run" >> $artifacts_path/run-retropie.sh
